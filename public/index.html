@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealTalk - Accueil</title>
+    
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    
+    <!-- Animate.css pour animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Icônes FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Styles personnalisés -->
+    <style>
+        /* Effet d'apparition en fondu */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animation au survol des boutons */
+        .btn-custom:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+        /* Arrière-plan héroïque */
+        .hero {
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+            color: white;
+            padding: 5rem 2rem;
+        }
+
+        /* Style du footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar is-dark is-fixed-top">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="#">
+                    <strong class="has-text-white">RealTalk</strong>
+                </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div id="navMenu" class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item" href="#features">Fonctionnalités</a>
+                    <a class="navbar-item" href="#about">À propos</a>
+                    <a class="navbar-item" href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Section Héroïque -->
+    <section class="hero is-fullheight-with-navbar">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-1 animate__animated animate__fadeInDown">Bienvenue sur RealTalk</h1>
+                <p class="subtitle animate__animated animate__fadeInUp">Discutez en ligne avec vos amis et votre famille en toute simplicité.</p>
+                <div class="buttons is-centered animate__animated animate__fadeInUp">
+                    <a href="/signup" class="button is-primary is-medium btn-custom">
+                        <i class="fas fa-user-plus"></i> Inscription
+                    </a>
+                    <a href="/login" class="button is-light is-medium btn-custom">
+                        <i class="fas fa-sign-in-alt"></i> Connexion
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fonctionnalités -->
+    <section id="features" class="section">
+        <div class="container">
+            <h2 class="title has-text-centered fade-in">Fonctionnalités</h2>
+            <div class="columns is-multiline">
+                <div class="column is-6 fade-in">
+                    <article class="box">
+                        <h3 class="title is-4"><i class="fas fa-comments"></i> Messagerie instantanée</h3>
+                        <p>Échangez des messages en temps réel avec vos amis.</p>
+                    </article>
+                </div>
+                <div class="column is-6 fade-in">
+                    <article class="box">
+                        <h3 class="title is-4"><i class="fas fa-video"></i> Appels audio & vidéo</h3>
+                        <p>Communiquez facilement par appel audio et vidéo.</p>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- À propos -->
+    <section id="about" class="section">
+        <div class="container has-text-centered">
+            <h2 class="title fade-in">À propos de RealTalk</h2>
+            <p class="fade-in">RealTalk est une application de discussion en ligne qui vous permet de rester connecté avec vos proches où que vous soyez.</p>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <footer id="contact">
+        <div class="container">
+            <h2 class="title has-text-white fade-in">Contactez-nous</h2>
+            <p class="fade-in">Email: <a href="mailto:support@realtalk.com">support@realtalk.com</a></p>
+            <p class="fade-in">Téléphone: +33 1 23 45 67 89</p>
+            <p>&copy; 2025 RealTalk. Tous droits réservés.</p>
+        </div>
+    </footer>
+<!-- importation du jquery--> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Script pour la navbar mobile -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const burger = document.querySelector('.navbar-burger');
+            const menu = document.querySelector('.navbar-menu');
+
+            burger.addEventListener('click', () => {
+                menu.classList.toggle('is-active');
+            });
+        });
+    </script>
+
+    <!-- Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on("connect", () => {
+            console.log("Connecté à Socket.io !");
+        });
+    </script>
+</body>
+</html>

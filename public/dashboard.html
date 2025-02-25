@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Tableau de Bord</h1>
+            <div class="columns">
+                <div class="column is-one-third">
+                    <aside class="menu">
+                        <p class="menu-label">Navigation</p>
+                        <ul class="menu-list">
+                            <li><a href="#">Accueil</a></li>
+                            <li><a href="#">Messages</a></li>
+                            <li><a href="#">Profil</a></li>
+                        </ul>
+                    </aside>
+                </div>
+                <div class="column">
+                    <div class="box">
+                        <h2 class="subtitle">Envoyer un Message</h2>
+                        <form id="messageForm">
+                            <div class="field">
+                                <label class="label">Destinataire</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="recipient" placeholder="Nom d'utilisateur" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Message</label>
+                                <div class="control">
+                                    <textarea class="textarea" id="message" placeholder="Votre message" required></textarea>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <button class="button is-primary" type="submit">Envoyer</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="box">
+                        <h2 class="subtitle">Messages Reçus</h2>
+                        <div id="messagesList">
+                            <!-- Les messages reçus seront affichés ici -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+      const socket = io("http://localhost:5000");
+
+// Récupérer l'utilisateur connecté depuis le localStorage
+const currentUser = JSON.parse(localStorage.getItem('user'));
+
+// Fonction pour afficher les messages
+const displayMessages = (messages, containerId, currentUserId, receiverName) => {
+    const messagesList = document.getElementById(containerId);
+    messagesList.innerHTML = ''; // Vider la liste existante
+
+    messages.forEach(msg => {
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("box");
+        const senderName = msg.sender_id === currentUserId ? "Vous" : receiverName;
+        messageElement.innerHTML = `<strong>De ${senderName}:</strong> ${msg.message} <br> <small>${msg.created_at}</small>`;
+        messagesList.appendChild(messageElement);
+    });
+};
+
+// Charger les messages reçus
+socket.on("load-messages", (messages) => {
+    displayMessages(messages, "messagesList", currentUser.id, currentReceiverName);
+});
+
+// Charger l'historique des messages
+socket.on("load-message-history", (messages) => {
+    displayMessages(messages, "messagesList", currentUser.id, currentReceiverName);
+});
+
+// Envoyer un message
+document.getElementById("messageForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const recipient = document.getElementById("recipient").value;
+    const message = document.getElementById("message").value;
+
+    if (message && recipient) {
+        socket.emit("send-message", { senderId: currentUser.id, receiverId: recipient, message });
+        document.getElementById("recipient").value = "";
+        document.getElementById("message").value = "";
+    }
+});
+
+// Recevoir un message en temps réel
+socket.on("receive-message", ({ senderId, message }) => {
+    const messagesList = document.getElementById("messagesList");
+    const newMessage = document.createElement("div");
+    newMessage.classList.add("box");
+    newMessage.innerHTML = `<strong>De ${senderId}:</strong> ${message}`;
+    messagesList.appendChild(newMessage);
+});
+    </script>
+</body>
+</html>
