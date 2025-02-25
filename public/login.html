@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealTalk - Connexion</title>
+    
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    
+    <!-- FontAwesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- Animate.css pour animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Styles personnalisés -->
+    <style>
+        .hero {
+            background: linear-gradient(135deg, rgba(255, 123, 179, 0.9), rgba(255, 117, 140, 0.9)), url('https://source.unsplash.com/1600x900/?nature,tech') no-repeat center center/cover;
+            color: white;
+            padding: 4rem 0;
+            background-position: center;
+        }
+        .hero .title {
+            font-size: 4rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+        .hero .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .card-content {
+            padding: 2rem;
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .button:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        .google-btn {
+            width: 100%;
+            background-color: #4285F4;
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: none;
+        }
+        .google-btn i {
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Section Héroïque -->
+    <section class="hero is-fullheight-with-navbar">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title animate__animated animate__fadeInDown">Connexion à RealTalk</h1>
+                <p class="subtitle animate__animated animate__fadeInUp">Restez connecté et discutez avec vos amis partout et à tout moment.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulaire de Connexion -->
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-4">
+                    <div class="card animate__animated animate__fadeIn">
+                        <div class="card-content">
+                            <h2 class="title is-4 has-text-centered">Connexion</h2>
+                            <form action="/login" method="POST">
+                                <div class="field">
+                                    <label class="label" for="email">Email</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input is-medium" type="email" name="email" id="email" placeholder="Votre email" required>
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label" for="password">Mot de passe</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input is-medium" type="password" name="password" id="password" placeholder="Votre mot de passe" required>
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <div class="control">
+                                        <button type="submit" class="button is-primary is-medium is-fullwidth">
+                                            <i class="fas fa-sign-in-alt"></i> Se connecter
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Google Sign-In Button -->
+                            <div class="field mt-4">
+                                <button class="google-btn" id="googleSignInBtn">
+                                    <i class="fab fa-google"></i> Se connecter avec Google
+                                </button>
+                            </div>
+                            <div class="has-text-centered">
+                                <p class="is-small">
+                                    Pas encore inscrit ? <a href="/signup">Créez un compte</a>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer has-text-centered">
+        <p>&copy; 2025 RealTalk. Tous droits réservés.</p>
+    </footer>
+
+    <!-- Google API Script -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!-- Script pour gérer la connexion Google -->
+    <script>
+        // Configurer l'API Google
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            var id_token = googleUser.getAuthResponse().id_token;
+            console.log("ID Token: " + id_token);
+            // Ici, tu peux envoyer l'ID token au serveur pour authentifier l'utilisateur
+        }
+    
+        // L'authentification Google via le bouton
+        document.getElementById('googleSignInBtn').addEventListener('click', function() {
+            gapi.auth2.getAuthInstance().signIn().then(function(googleUser) {
+                onSignIn(googleUser);
+            });
+        });
+    
+        // Initialiser l'authentification
+        function start() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: '87116214703-2hnjj84o7o3t00uc69so0ve3h20i3udb.apps.googleusercontent.com'
+                });
+            });
+        }
+    
+        start();
+    </script>
+    
+</body>
+</html>
